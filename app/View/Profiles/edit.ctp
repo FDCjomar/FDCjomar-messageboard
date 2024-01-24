@@ -1,7 +1,20 @@
 <section>
     <div class="container">
         <div class="col-md-8">
+            <div class="row">
+            <?php if (isset($response['errors'])): ?>
+                <div class="alert alert-danger">
+                    <strong>Error!</strong>
+                    <ul>
+                        <?php foreach ($response['errors'] as $field => $error): ?>
+                            <li><?php echo $error[0]; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+            </div>
         <div class="row">
+            
             <div class="col-md-6">
             <?php $imageUrl = $this->Html->webroot('img/default-pic.png'); ?>
             
@@ -12,15 +25,16 @@
                 <?= $this->Form->label('profile_img_file', 'Profile Picture', array('class' => 'form-label')) ?>
                 <?= $this->Form->file('profile_img_file', array('class' => 'form-control-file')) ?>
             </div>
+            
         </div>
         <div class="row">
             <fieldset class="col-md-8">
-                <?= $this->Form->input('name', array('label' => 'Name', 'class' => 'form-control')) ?>
-                <?= $this->Form->input('birthdate', array('label' => 'Birthdate', 'type' => 'text', 'id' => 'birthdate', 'class' => 'form-control datepicker')) ?>
+                <?= $this->Form->input('name', array('label' => 'Name', 'class' => 'form-control', 'value' => $user['User']['name'], 'error' => false, 'required' => false)) ?>
+                <?= $this->Form->input('birthdate', array('label' => 'Birthdate', 'type' => 'text', 'id' => 'birthdate', 'class' => 'form-control datepicker', 'value' => $user['User']['birthdate'], 'error' => false, 'required' => false)) ?>
                 <?= $this->Form->label('gender', 'Gender', array('class' => 'form-check-label')) ?>
-                <?= $this->Form->radio('gender', array('M' => 'Male', 'F' => 'Female'), array('class' => 'form-check-input')) ?>
-                <?= $this->Form->label('hobby', 'Hobby', array('class' => 'form-label')) ?>
-                <?= $this->Form->textarea('hobby', array('rows' => '5', 'cols' => '50', 'class' => 'form-control')) ?>
+                <?= $this->Form->radio('gender', array('M' => 'Male', 'F' => 'Female'), array('default' => isset($user['User']['gender']) ? $user['User']['gender'] : null,'class' => 'form-check-input', 'error' => false, 'required' => false)) ?>
+                <?= $this->Form->label('hubby', 'Hubby', array('class' => 'form-label')) ?>
+                <?= $this->Form->textarea('hubby', array('rows' => '5', 'cols' => '50', 'class' => 'form-control', 'value' => $user['User']['hubby'], 'error' => false, 'required' => false)) ?>
             </fieldset>
         </div>
         <div class="row">

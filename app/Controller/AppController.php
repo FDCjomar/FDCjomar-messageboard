@@ -39,12 +39,12 @@ class AppController extends Controller {
             'Auth' => array(
                 'loginRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
                 'logoutRedirect' => array('controller' => 'Users', 'action' => 'login'),
-                'authError' => 'You are not authorized to access that location.',
+                'authError' => 'You are not authorized to access that page.',
                 'authenticate' => array(
                     'Form' => array(
-                        'fields' => array('username' => 'email') // Adjust the field if needed
+                        'fields' => array('username' => 'email', 'password' => 'password') // Adjust the field if needed
                     )
-                )
+                    )
             )
     );
 

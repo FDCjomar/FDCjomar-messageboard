@@ -6,7 +6,7 @@ class UsersController extends AppController {
 
     public function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow('add', 'logout');
+        $this->Auth->allow('add', 'logout', 'index');
         $this->Auth->deny('logout');
         
     }
@@ -36,10 +36,9 @@ class UsersController extends AppController {
                     'email' => $this->request->data['User']['email'],
                     'password' => $this->request->data['User']['password']
                 );
-    
-                // Log in the user
                 $this->Auth->login($credentials);
-    
+                  // Get the full user data
+              
                 $response = array('status' => 'success', 'message' => 'Successfully Register');  
             } else {
                 $response = array('status' => 'error', 'errors' => $this->User->validationErrors);

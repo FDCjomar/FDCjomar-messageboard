@@ -26,7 +26,7 @@
 <script>
     $(document).ready(function() {
         $('#register-form').submit(function(event) {
-            event.preventDefault();
+             event.preventDefault();
             console.log('submitted');
             $.ajax({
                 type: 'POST',
