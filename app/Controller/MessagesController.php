@@ -79,17 +79,19 @@ class MessagesController extends AppController {
     public function compose(){
         $this->loadModel('User');
         $data = $this->User->find('list');
-        $formattedData = array();
-        foreach ($data as $id => $text) {
-            $formattedData[] = array('id' => $id, 'text' => $text);
-        }
-        $this->set('data', json_encode($formattedData));
+        // $formattedData = array();
+        // foreach ($data as $id => $text) {
+        //     $formattedData[] = array('id' => $id, 'text' => $text);
+        // }
+        $this->set('data', $data);
         
     }
     public function send(){
         $this->autoRender = false;
         if($this->request->is('post')){
+            $userAuth = $this->Auth->user('id');
             debug($this->request->data);
+
         }
     }
 
