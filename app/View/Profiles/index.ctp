@@ -1,19 +1,24 @@
 <section class="container mt-5">
     <div class="row">
         <div class="col-md-3">
-            <?php $imageUrl = $this->Html->webroot('img/default-pic.png'); ?>
+            <?php if(isset($profile['User']['image_path'])): ?>
             
-            <?php echo $this->Html->image('../../' . $imageUrl, array('alt' => 'Example Image', 'width' => '180', 'height' => '180')); ?>
+            <?php echo $this->Html->image('uploads/' . $profile['User']['image_path'], array('alt' => 'Profile Image', 'width' => '180', 'height' => '180')); ?>
+            <?php else: ?>
+
+            <?php $imageUrl = $this->Html->webroot('img/default-pic.png'); ?>
+            <?php echo $this->Html->image('../../' . $imageUrl, array('alt' => 'Profile Image', 'width' => '180', 'height' => '180')); ?>
+            <?php endif; ?>
         </div>
         <div class="col-md-9">
             <div class="header-page"><h1 class="display-4">User Profile</h1></div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <p class="profile-name h3">Jomar Godinez</p>
-                    <p class="gender"><span>Gender: </span> July 13, 1995</p>
-                    <p class="joined"><span>Joined: </span> August 13, 2014 9am</p>
-                    <p class="last-login"><span>Last Login: </span> August 14, 2014 11am</p>
+                    <p class="profile-name h3"><?= $profile['User']['name'] ?></p>
+                    <p class="gender"><span>Gender: </span> <?= $profile['User']['gender'] == 'F' ? 'Female' : 'Male'; ?> </p>
+                    <p class="joined"><span>Joined: </span> <?= $profile['User']['created'] ?></p>
+                    <p class="last-login"><span>Last Login: </span> <?= $profile['User']['last_login_time'] ?></p>
                 </div>
                 
             </div>
@@ -24,7 +29,7 @@
     <div class="col-md-9">
             <div class="hubby">
                 <p class="hubby-header h4">Hobby</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde iste quam, quia veritatis illo impedit porro possimus iusto esse quae.</p>
+                <p><?= $profile['User']['hubby'] ?></p>
             </div>
     </div>
     </div>

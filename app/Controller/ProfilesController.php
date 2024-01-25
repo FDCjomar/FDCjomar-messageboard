@@ -1,6 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('String', 'Utility');
+App::uses('CakeText', 'Utility');
 class ProfilesController extends AppController {
 
     public $uses = array('User'); 
@@ -12,7 +12,12 @@ class ProfilesController extends AppController {
         
     }
     public function index(){
+        $authUser = $this->Auth->user();
+        $user = $this->User->find('first', array(
+                'conditions' => array('User.id' => $authUser['id'])
+            ));
 
+        $this->set('profile', $user);
     }
 
     public function edit(){
@@ -22,7 +27,6 @@ class ProfilesController extends AppController {
             ));
 
             $this->set('user', $user);
-           
         if ($this->request->is(array('post', 'put'))) {
             $originalValidationRules = $this->User->validate;
 
@@ -67,20 +71,31 @@ class ProfilesController extends AppController {
             
             $this->User->set($this->request->data);
             $this->User->id = $authUser['id'];
-            if ($this->User->validates()) {
-                if ($this->User->save($this->request->data)) {
-                    // ... your logic after saving
-        
-                    // Reset the validation rules to the original ones
+            
+        if ($this->User->validates()) {
+            if (!empty($this->request->data['User']['profile_img_file']['tmp_name'])) {
+                $file = $this->request->data['User']['profile_img_file'];
+                $fileName = CakeText::uuid() . "." . pathinfo($file['name'], PATHINFO_EXTENSION);
+                $uploadPath = WWW_ROOT . 'img/uploads' . DS . $fileName;
+
+                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                    $this->User->id = $authUser['id'];
+                    $this->User->saveField('image_path', $fileName);
                     $this->User->validate = $originalValidationRules;
-                    $response = array('status' => 'success', 'message' => 'Successfully Register');
+                    $response = array('status' => 'success', 'message' => 'Successfully updated profile');
                 }
-            } else {
-                // Validation failed, display errors
-                $response = array('status' => 'error', 'errors' => $this->User->validationErrors);
+            } 
+            if ($this->User->save($this->request->data, array('validate' => false))) {
+                $this->User->validate = $originalValidationRules;
+               
+                $response = array('status' => 'success', 'message' => 'Successfully updated profile');
             }
-    
-            $this->set('response', $response);
+            $this->redirect(['controller' => 'Profiles', 'action' => 'index']);
+        } else {
+            $response = array('status' => 'error', 'errors' => $this->User->validationErrors);
+        }
+
+        $this->set('response', $response);
         }
 
     }

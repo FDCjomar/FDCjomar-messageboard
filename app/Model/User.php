@@ -1,8 +1,27 @@
 <?php
 
 App::uses('AppModel', 'Model');
+App::uses('AuthComponent', 'Controller/Component');
 
 class User extends AppModel {
+
+    public $name = 'User';
+
+    public $hasMany = array(
+        'SentMessages' => array(
+            'className' => 'Message',
+            'foreignKey' => 'sender_id'
+        ),
+        'ConversationsUser1' => array(
+            'className' => 'Conversation',
+            'foreignKey' => 'user1_id'
+        ),
+        'ConversationsUser2' => array(
+            'className' => 'Conversation',
+            'foreignKey' => 'user2_id'
+        )
+    );
+
     public $validate = array(
         'name' => array(
             'notBlank' => array(
@@ -10,7 +29,7 @@ class User extends AppModel {
                 'message' => 'Name is required',
                 'required' => true,
                 'allowEmpty' => false,
-                'on' => 'create'
+                'on' => 'register'
             ),
             'between' => array(
                 'rule' => array('between', 5, 20),
@@ -59,8 +78,6 @@ class User extends AppModel {
                 'message' => 'Passwords do not match.',
             ),
         ),
-       
-       
     );
 
     public function beforeSave($options = array()) {
@@ -75,6 +92,18 @@ class User extends AppModel {
         return $password === $this->data['User']['password'];
     }
 
+    public function compareNewPasswords($check) {
+        $password = reset($check);
+        return $password === $this->data['User']['newPassword'];
+    }
+
+    public function isValidMimeType($check, $allowedMimeTypes) {
+        $file = current($check);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
     
+        return in_array($mime, $allowedMimeTypes);
+    }
     
 }

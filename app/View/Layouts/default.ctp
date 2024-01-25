@@ -47,11 +47,14 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-	  <li class="nav-item">
-          <a class="nav-link" href="#">Message List</a>
-        </li>
+	 
 		<?php if ($this->Session->check('Auth.User')): ?>
-
+			<li class="nav-item">
+	  			<?= $this->Html->link('Message List', array('controller' => 'Messages', 'action' => 'index'), array('class' => 'nav-link')); ?>
+        	</li>
+			<li class="nav-item">
+				<?= $this->Html->link('Account', array('controller' => 'Users', 'action' => 'changeEmail'), array('class' => 'nav-link')); ?>
+			</li>
 			<li class="nav-item">
 				<?= $this->Html->link('Profile', array('controller' => 'Profiles', 'action' => 'index'), array('class' => 'nav-link')); ?>
 			</li>

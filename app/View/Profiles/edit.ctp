@@ -18,7 +18,14 @@
             <div class="col-md-6">
             <?php $imageUrl = $this->Html->webroot('img/default-pic.png'); ?>
             
-            <?php echo $this->Html->image('../../' . $imageUrl, array('alt' => 'Example Image', 'width' => '180', 'height' => '180')); ?>
+            <?php if(isset($user['User']['image_path'])): ?>
+            
+            <?php echo $this->Html->image('uploads/' . $user['User']['image_path'], array('alt' => 'Profile Image', 'width' => '180', 'height' => '180')); ?>
+            <?php else: ?>
+
+            <?php $imageUrl = $this->Html->webroot('img/default-pic.png'); ?>
+            <?php echo $this->Html->image('../../' . $imageUrl, array('alt' => 'Profile Image', 'width' => '180', 'height' => '180')); ?>
+            <?php endif; ?>
             </div>
             <?= $this->Form->create('User', array('role' => 'form', 'type' => 'file', 'class' => 'col-md-6')); ?>
             <div class="column user-data">
