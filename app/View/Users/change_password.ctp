@@ -25,12 +25,12 @@
                 </div>
             <?php endif; ?>
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Change Email</h1>
+                <h1 class="h2">Change Password</h1>
             </div>
             <div class="container col-md-5 mt-5">
-                <?php echo $this->Form->create('User'); ?>
-                <?php echo $this->Form->input('newPassword', array('label' => 'New Password', 'class' => 'form-control', 'type' => 'password', 'required' => false, 'error' => false)); ?>
-                <?php echo $this->Form->input('confirmNewPassword', array('label' => 'Confirm Password', 'class' => 'form-control', 'type' => 'password', 'required' => false, 'error' => false)); ?>
+                <?php echo $this->Form->create(); ?>
+                <?php echo $this->Form->input('newPassword', array('label' => 'New Password', 'type' => 'password', 'class' => 'form-control', 'required' => false, 'error' => false)); ?>
+                <?php echo $this->Form->input('newPassword_confirmation', array('label' => 'Confirm Password', 'class' => 'form-control', 'type' => 'password', 'required' => false, 'error' => false)); ?>
                 <?php echo $this->Form->submit('Change Password', array('class' => 'btn btn-primary mt-3')); ?>
                 <?php echo $this->Form->end(); ?>
 

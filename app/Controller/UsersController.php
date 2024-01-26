@@ -4,6 +4,8 @@ App::uses('AppController', 'Controller');
 App::uses('CakeTime', 'Utility');
 class UsersController extends AppController {
 
+    public $components = array('Session');
+
     public function beforeFilter() {
         parent::beforeFilter();
         $this->Auth->allow('add', 'logout', 'index');
@@ -80,9 +82,32 @@ class UsersController extends AppController {
     }
 
     public function changeEmail() {
+       $this->Session->setFlash(null);
+
+    if ($this->request->is('post')) {
+        $this->User->set($this->request->data);
+        if ($this->User->validates(array('fieldList' => array('email')))) {
+            $userId = $this->Auth->user('id'); 
+            $this->User->id = $userId; 
+            $this->User->saveField('email', $this->request->data['User']['email']);
+            
+        } else {
+            $this->set('errors', $this->User->validationErrors);
+        }
+    }
     }
 
     public function changePassword(){
+      
+        if($this->request->is('post', 'put')){
+            if($this->User->validates(array('fieldList' => array('newPassword', 'newPassword_confirmation')))){
+               
+            } else {
+                debug($this->User->validationErrors);
+                debug($this->request->data);
+
+            }
+        }
         
     }
 

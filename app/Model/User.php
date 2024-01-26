@@ -37,13 +37,6 @@ class User extends AppModel {
             ),
         ),
         'email' => array(
-            'rule' => array('email'),
-            'message' => 'Invalid email format',
-            'required' => true,
-            'allowEmpty' => false,
-            'on' => 'create'
-        ),
-        'email' => array(
             'notBlank' => array(
                 'rule' => 'notBlank',
                 'message' => 'Please enter your email address.',
@@ -51,10 +44,16 @@ class User extends AppModel {
                 'required' => true,
             ),
             'email' => array(
+                'rule' => array('email', true),
+                'message' => 'Please enter a valid email address.',
+                'allowEmpty' => false,
+                'required' => true,
+            ),
+            'isUnique' => array(
                 'rule' => 'isUnique',
                 'message' => 'This email has already been taken',
                 'on' => 'create'
-            ),
+            ), 
         ),
         'password' => array(
             'notBlank' => array(
@@ -76,6 +75,28 @@ class User extends AppModel {
             'custom' => array(
                 'rule' => array('comparePasswords'),
                 'message' => 'Passwords do not match.',
+            ),
+        ),
+        'newPassword' => array(
+            'notBlank' => array(
+                'rule' => 'notBlank',
+                'message' => 'Please enter a new password.',
+                'allowEmpty' => false,
+                'required' => true,
+                'on' => 'create'
+            ),
+        ),
+        'newPassword_confirmation' => array(
+            'notBlank' => array(
+                'rule' => 'notBlank',
+                'message' => 'Please confirm your new password.',
+                'allowEmpty' => false,
+                'required' => true,
+                'on' => 'create'
+            ),
+            'custom' => array(
+                'rule' => array('comparePasswords'),
+                'message' => 'New Passwords do not match.',
             ),
         ),
     );

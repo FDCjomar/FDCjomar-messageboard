@@ -12,14 +12,13 @@
                 </ul>
             </div>
         </nav>
-
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <?php if (isset($response['errors'])): ?>
+        <?php if (isset($errors['email'])): ?>
                 <div class="alert alert-danger">
                     <strong>Error!</strong>
                     <ul>
-                        <?php foreach ($response['errors'] as $field => $error): ?>
-                            <li><?php echo $error[0]; ?></li>
+                        <?php foreach($errors['email'] as $error): ?>
+                            <li><?php echo $error; ?></li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
@@ -29,7 +28,7 @@
             </div>
             <div class="container col-md-5 mt-5">
                 <?php echo $this->Form->create('User'); ?>
-                <?php echo $this->Form->input('newEmail', array('label' => 'New Email', 'class' => 'form-control', 'required' => false, 'error' => false)); ?>
+                <?php echo $this->Form->input('email', array('label' => 'New Email', 'class' => 'form-control', 'required' => false, 'error' => false, 'type' => 'text')); ?>
                 <?php echo $this->Form->submit('Change Email', array('class' => 'btn btn-primary mt-3')); ?>
                 <?php echo $this->Form->end(); ?>
             </div>
