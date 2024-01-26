@@ -31,12 +31,13 @@
                 </div>
             </div>
             <div class="row">
-                <p><?= $recipients['User2']['name'] ?></p>
+                <p><?= $authUserId == $recipients['User2']['id'] ? $recipients['User1']['name'] : $recipients['User2']['name'] ?></p>
             </div>
             
         </div>
         <div class="col-md-7 border-dark">
-            <p><?= $recipients['Message']['0']['content'] ?></p>
+            <?php $lastIndex = count($recipients['Message']) - 1 ?>
+            <p><?= $recipients['Message'][$lastIndex]['content'] ?></p>
             <p class="text-muted"><?= $recipients['Message']['0']['created'] ?></p>
         </div>
         <div class="col-md-3">

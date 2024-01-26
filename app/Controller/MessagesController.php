@@ -12,19 +12,24 @@ class MessagesController extends AppController {
         $this->loadModel('Message');
         $authUser = $this->Auth->user('id');
         // $conversations = $this->Conversation->find('all');
- 
         
+        $getUser = $this->User->findById($authUser);
         $conversations = $this->User->ConversationsUser1->find('all', array(
-            'conditions' => array('ConversationsUser1.user1_id' => $authUser),
+            'conditions' => array(
+                'OR' => array(
+                    array('ConversationsUser1.user1_id' => $authUser),
+                    array('ConversationsUser1.user2_id' => $authUser)
+                )
+            ),
             'contain' => array(
                 'User2' => array(
                     'fields' => array('name') // Specify the fields you want to retrieve
                 )
             ),
-                'order' => array('ConversationsUser1.created' => 'DESC')
+            'order' => array('ConversationsUser1.created' => 'DESC')
         ));
-
-        $this->set('conversations', $conversations);
+        
+        $this->set(array('conversations' => $conversations, 'authUserId' => $authUser));
     
     }
 
