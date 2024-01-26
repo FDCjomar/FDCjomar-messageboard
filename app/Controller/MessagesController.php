@@ -12,8 +12,7 @@ class MessagesController extends AppController {
         $this->loadModel('Message');
         $authUser = $this->Auth->user('id');
         // $conversations = $this->Conversation->find('all');
-
-        
+ 
         
         $conversations = $this->User->ConversationsUser1->find('all', array(
             'conditions' => array('ConversationsUser1.user1_id' => $authUser),
@@ -170,5 +169,36 @@ class MessagesController extends AppController {
         
         $this->set('conversations', $conversations);
     }
+
+    public function reply($conversation_id){
+
+        $this->loadModel('Message');
+        $this->autoRender = false;
+
+        if($this->request->isAjax()){
+            $this->Message->create();
+
+            $reply = array(
+                'conversation_id' => $conversation_id,
+                'sender_id' => $this->Auth->user('id'),
+                'content' => $this->request->data['Message']['content']
+            );
+            if($this->Message->save($reply)){
+                $newReply = $this->Message->findById($this->Message->id);
+                $newReply['auth_id'] = $this->Auth->user('id');
+                if($newReply['Sender']['image_path'] == null){
+                    $newReply['Sender']['image_path'] =  'default-pic.png'; 
+                }
+                $response = array('status' => 'success', 'message' => 'Successfully sent');
+            } else {
+                $response = array('status' => 'error', 'message' => 'Failed to send');
+            }
+            echo json_encode($newReply);
+            exit();
+        }
+
+    }
+
+    
 
 }

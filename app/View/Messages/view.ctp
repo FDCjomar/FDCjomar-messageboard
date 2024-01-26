@@ -11,7 +11,6 @@
     </div>
     <div class="form-group">
         <div class="col-sm-6">
-        <?php echo $this->Form->hidden('conversation_id', array('value' => $conversations['Conversation']['id'])); ?>
             <?php echo $this->Form->textarea('content', array('class' => 'form-control', 'rows' => '5', 'cols' => '5')); ?>
         </div>
     </div>
@@ -39,7 +38,7 @@
                     </div>
                 </div>
                 <div class="col-md-9 border-dark">
-                    <div class="card-body">a
+                    <div class="card-body">
                         <p class="card-text"><?= $message['content'] ?></p>
                     </div>
                     <div class="card-footer">
@@ -60,13 +59,35 @@
             var formData = $(this).serialize();
              // AJAX request
              $.ajax({
-                url: '<?php echo $this->Html->url(array('controller' => 'Messages', 'action' => 'send')); ?>',
+                url: '<?php echo $this->Html->url(array('controller' => 'Messages', 'action' => 'reply', $conversations['Conversation']['id'])); ?>',
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
                 success: function(response) {
                     // Handle success response
                     console.log(response);
+                    var newMessage = '<div class="row border-black p-3 bg-white m-3">' +
+                                '<div class="col-md-3 border-dark ' + (response.auth_id == response.Message.sender_id ? 'order-md-1' : '') + '">' +
+                                    '<div class="row justify-content-center align-items-center">' +
+                                        '<div class="col-md-12 border">' +
+                                            '<img src="' + (response.Sender.image_path == 'default-pic.png' ? '../../img/' + response.Sender.image_path : 'uploads/' + response.Sender.image_path) + '" alt="Profile Image" class="img-fluid rounded-circle" width="100" height="100">' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="row justify-content-center mt-2">' +
+                                        '<p>' + response.Sender.name + '</p>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="col-md-9 border-dark">' +
+                                    '<div class="card-body">' +
+                                        '<p class="card-text">' + response.Message.content + '</p>' +
+                                    '</div>' +
+                                    '<div class="card-footer">' +
+                                        '<small class="text-muted">' + response.Message.created + '</small>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>';
+                            $('#message-list').append(newMessage);
+                            $('#replyForm')[0].reset();
                 },
                 error: function(xhr, status, error) {
                     // Handle error
