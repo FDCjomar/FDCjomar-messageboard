@@ -100,6 +100,7 @@ class UsersController extends AppController {
     public function changePassword(){
       
         if($this->request->is('post', 'put')){
+            $this->User->set($this->request->data);
             if($this->User->validates(array('fieldList' => array('newPassword', 'newPassword_confirmation')))){
                
             } else {
