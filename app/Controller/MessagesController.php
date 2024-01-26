@@ -12,6 +12,8 @@ class MessagesController extends AppController {
         $this->loadModel('Message');
         $authUser = $this->Auth->user('id');
         // $conversations = $this->Conversation->find('all');
+
+        
         
         $conversations = $this->User->ConversationsUser1->find('all', array(
             'conditions' => array('ConversationsUser1.user1_id' => $authUser),
@@ -87,12 +89,86 @@ class MessagesController extends AppController {
         
     }
     public function send(){
+        $this->loadModel('Conversation');
+        $this->loadModel('Message');
         $this->autoRender = false;
         if($this->request->is('post')){
-            $userAuth = $this->Auth->user('id');
-            debug($this->request->data);
+            $userId = $this->Auth->user('id');
+
+            $recipientId = $this->request->data['Message']['recipient'];
+            $userConversation = array(
+                'user1_id' => $userId,
+                'user2_id' => $recipientId,
+            );
+            if($this->Conversation->save($userConversation)){
+                $conversationId = $this->Conversation->getLastInsertID();
+
+                $message = array(
+                    'conversation_id' => $conversationId,
+                    'sender_id' => $userId,
+                    'content' => $this->request->data['Message']['content'], // Assuming 'content' is the message content
+                    'created' => date('Y-m-d H:i:s') // Assuming 'created' field is automatically set
+                );
+
+                if ($this->Message->save($message)) {
+                    $this->redirect(['action' => 'index']);
+
+                } else {
+                    die('Failed save message');
+                }
+
+            } else {
+                die('Failed to save');
+            }
 
         }
+    }
+
+    public function view($id){
+
+        
+        $this->loadModel('User');
+        $this->loadModel('Conversation');
+        $this->loadModel('Message');
+        $this->Conversation->Behaviors->load('Containable');
+        $conversations = $this->Conversation->find('first', array(
+            'conditions' => array('Conversation.id' => $id),
+            'contain' => array(
+                'Message' => array(
+                    'order' => array('Message.created' => 'ASC') 
+                )
+            )
+        ));
+        $senderIds = array_unique(array_column($conversations['Message'], 'sender_id'));
+        $sendersData = $this->User->find('all', array(
+            'conditions' => array('User.id' => $senderIds),
+            'fields' => array('User.id', 'User.name', 'User.image_path') 
+        ));
+        
+        $senders = [];
+        foreach ($sendersData as $sender) {
+            $senders[$sender['User']['id']] = [
+                'name' => $sender['User']['name'],
+                'image_path' => $sender['User']['image_path']
+            ];
+        }
+        
+        foreach ($conversations['Message'] as &$message) {
+            if (isset($senders[$message['sender_id']])) {
+                $message['sender_name'] = $senders[$message['sender_id']]['name'];
+                $message['sender_image_path'] = $senders[$message['sender_id']]['image_path'];
+                $message['auth_id'] = $userId = $this->Auth->user('id');
+                if($message['sender_image_path'] == null){
+                    $message['sender_image_path'] = $message['sender_image_path'] = 'default-pic.png'; 
+                }
+            } else {
+                $message['sender_name'] = 'Unknown'; 
+                $message['sender_image_path'] = 'default-pic.png'; 
+            }
+        }
+        
+        
+        $this->set('conversations', $conversations);
     }
 
 }

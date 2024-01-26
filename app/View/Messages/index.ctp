@@ -39,8 +39,19 @@
             <p><?= $recipients['Message']['0']['content'] ?></p>
             <p class="text-muted"><?= $recipients['Message']['0']['created'] ?></p>
         </div>
-        <div class="col-md-2">
-            <a href="" class="delete-button" data-conversation-id="<?= $recipients['ConversationsUser1']['id']?>">Delete</a>
+        <div class="col-md-3">
+            <a href="" class="delete-button btn btn-primary" data-conversation-id="<?= $recipients['ConversationsUser1']['id']?>">Delete</a>
+            <?= $this->Html->link(
+    'See Details', // Link text
+    array(
+        'controller' => 'Messages', 
+        'action' => 'view', 
+        $recipients['ConversationsUser1']['id']
+    ),
+    array(
+        'class' => 'btn btn-secondary', 
+    )
+); ?>
         </div>
         
     </div>
