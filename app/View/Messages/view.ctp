@@ -1,3 +1,13 @@
+<style>
+  .card-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    padding: 10px;
+  }
+
+</style>
 <div class="container">
     <div class="jumbotron text-center">
         <h1 class="display-4">Message Details</h1>
@@ -39,7 +49,7 @@
                 </div>
                 <div class="col-md-9 border-dark">
                     <div class="card-body">
-                        <p class="card-text"><?= $message['content'] ?></p>
+                        <div class="card-text long-text"><?= $message['content'] ?></div>
                     </div>
                     <div class="card-footer">
                         <small class="text-muted"><?= $message['created'] ?></small>
@@ -79,7 +89,7 @@
                                 '</div>' +
                                 '<div class="col-md-9 border-dark">' +
                                     '<div class="card-body">' +
-                                        '<p class="card-text">' + response.Message.content + '</p>' +
+                                        '<div class="card-text long-text">' + response.Message.content + '</div>' +
                                     '</div>' +
                                     '<div class="card-footer">' +
                                         '<small class="text-muted">' + response.Message.created + '</small>' +
@@ -95,6 +105,10 @@
                 }
             });
         });
+        $(document).on('click', '.card-text', function(){
+            $(this).css('white-space', $(this).css('white-space') === "normal" ? "nowrap" : "normal");
+        });
+
     });
 </script>
 

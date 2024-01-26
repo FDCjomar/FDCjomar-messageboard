@@ -1,3 +1,12 @@
+<style>
+    .card-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    padding: 10px;
+  }
+</style>
 <div class="container">
     <div class="jumbotron text-center">
         <h1 class="display-4">Message List</h1>
@@ -37,7 +46,7 @@
         </div>
         <div class="col-md-7 border-dark">
             <?php $lastIndex = count($recipients['Message']) - 1 ?>
-            <p><?= $recipients['Message'][$lastIndex]['content'] ?></p>
+            <div class="card-text"><?= $recipients['Message'][$lastIndex]['content'] ?></div>
             <p class="text-muted"><?= $recipients['Message']['0']['created'] ?></p>
         </div>
         <div class="col-md-3">
