@@ -25,43 +25,33 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        document.getElementById('register-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        console.log('submitted');
-
-        var formData = new FormData(this);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', this.getAttribute('action'));
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
+        $('#register-form').submit(function(event) {
+             event.preventDefault();
+            console.log('submitted');
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
                     if (response.status === 'success') {
-                        document.getElementById('validation-errors-container').innerHTML = '';
-                        document.getElementById('validation-errors-container').style.display = 'none';
+                        $('#validation-errors-container').html('').hide();
                         window.location.href = '../pages/thankYou';
                     } else if (response.status === 'error') {
-                        document.getElementById('validation-errors-container').innerHTML = '';
-                        document.getElementById('validation-errors-container').style.display = 'none';
+                        $('#validation-errors-container').html('').hide();
 
-                        Object.keys(response.errors).forEach(function(field) {
-                            var errors = response.errors[field];
+                        $.each(response.errors, function(field, errors) {
                             var errorMessage = '<ul>';
-                            errors.forEach(function(error) {
+                            $.each(errors, function(index, error) {
                                 errorMessage += '<li>' + error + '</li>';
                             });
                             errorMessage += '</ul>';
-                            document.getElementById('validation-errors-container').innerHTML += errorMessage;
-                            document.getElementById('validation-errors-container').style.display = 'block';
+                            $('#validation-errors-container').append(errorMessage).show();
                         });
                     }
                 }
-            }
-        };
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send(new URLSearchParams(formData).toString());
-    });
+            });
+        }); 
 
     });
 </script>

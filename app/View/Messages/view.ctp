@@ -37,6 +37,7 @@
                     <div class="row justify-content-center align-items-center">
                         <div class="col-md-12 border">
                             <?php if ($message['sender_image_path'] == 'default-pic.png'): ?>
+                                
                                 <?php echo $this->Html->image('../img/' . $message['sender_image_path'], array('alt' => 'Profile Image', 'class' => 'img-fluid rounded-circle', 'width' => '100', 'height' => '100')); ?>
                             <?php else: ?>
                                 <?php echo $this->Html->image('uploads/' . $message['sender_image_path'], array('alt' => 'Profile Image', 'class' => 'img-fluid rounded-circle', 'width' => '100', 'height' => '100')); ?>

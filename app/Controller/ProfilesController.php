@@ -14,7 +14,7 @@ class ProfilesController extends AppController {
     public function index(){
         $authUser = $this->Auth->user();
         $user = $this->User->find('first', array(
-                'conditions' => array('User.id' => $authUser['id'])
+                'conditions' => array('User.email' => $authUser['email'])
             ));
 
         $this->set('profile', $user);

@@ -51,13 +51,13 @@ class UsersController extends AppController {
     }
 
     public function register(){
+
         if ($this->request->is('post')) {
+            unset($this->User->validate['newPassword']);
+            unset($this->User->validate['newPassword_confirmation']);
             // debug($this->request->data);
             $this->User->create();
-            if ($this->request->data['User']['password'] !== $this->request->data['User']['password_confirmation']) {
-                $this->User->invalidate('password_confirmation', 'Passwords do not match.');
-            }
-
+            $this->User->set($this->request->data);
             if ($this->User->save($this->request->data)) {
                 // debug($this->User->validationErrors);
                 $this->User->id = $this->User->getLastInsertID();
@@ -98,15 +98,21 @@ class UsersController extends AppController {
     }
 
     public function changePassword(){
-      
+       
         if($this->request->is('post', 'put')){
             $this->User->set($this->request->data);
             if($this->User->validates(array('fieldList' => array('newPassword', 'newPassword_confirmation')))){
-               
+                $userId = $this->Auth->user('id'); 
+                $this->User->id = $userId; 
+                $this->User->saveField('password', $this->request->data['User']['newPassword']);
             } else {
-                debug($this->User->validationErrors);
-                debug($this->request->data);
+                $errors = array();
+                foreach($this->User->validationErrors as $errorArr){
+                    $errors[] =$errorArr[0];
 
+                }
+               
+                $this->set('errors', $errors);
             }
         }
         

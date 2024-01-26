@@ -95,7 +95,7 @@ class User extends AppModel {
                 'on' => 'create'
             ),
             'custom' => array(
-                'rule' => array('comparePasswords'),
+                'rule' => array('compareNewPasswords'),
                 'message' => 'New Passwords do not match.',
             ),
         ),
@@ -110,13 +110,15 @@ class User extends AppModel {
 
     public function comparePasswords($check) {
         $password = reset($check);
-        return $password === $this->data['User']['password'];
+        return $password === $this->data[$this->alias]['password'];
     }
-
+ 
     public function compareNewPasswords($check) {
         $password = reset($check);
-        return $password === $this->data['User']['newPassword'];
+        return $password === $this->data[$this->alias]['newPassword'];
     }
+ 
+ 
 
     public function isValidMimeType($check, $allowedMimeTypes) {
         $file = current($check);
